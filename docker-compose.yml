@@ -6,19 +6,15 @@ services:
     volumes:
       - qdrant_data:/qdrant/storage
 
-  ollama:
-    image: ollama/ollama
-    ports:
-      - "11434:11434"
-    volumes:
-      - ollama:/root/.ollama
-
   api:
     build: .
     depends_on:
       - qdrant
-      - ollama
+    environment:
+      - QDRANT_URL=http://qdrant:6333
+      - OLLAMA_HOST=http://host.docker.internal:11434
+    ports:
+      - "8000:8000"
 
 volumes:
   qdrant_data:
-  ollama:
